@@ -20,6 +20,8 @@ import todayImage from "../../assets/imgs/today.jpg";
 import Task from "../components/Task";
 
 import { CheckBox } from "react-native-elements";
+import AddTask from "../components/AddTask";
+import { Ionicons } from "@expo/vector-icons";
 
 const initialState = {
   showDoneTasks: true,
@@ -104,6 +106,7 @@ export default class TaskList extends Component {
     const today = moment().locale("pt-br").format("ddd, D [de] MMMM");
     return (
       <View style={styles.container}>
+        <AddTask isVisible={this.state.showAddTask} onCancel={() => this.setState({showAddTask: false})} />
         <ImageBackground style={styles.titleContainer} source={todayImage}>
           <CheckBox
             containerStyle={{
@@ -133,6 +136,17 @@ export default class TaskList extends Component {
             )}
           ></FlatList>
         </View>
+        <TouchableOpacity
+          style={styles.addButton}
+          activeOpacity={0.7}
+          onPress={() => this.setState({ showAddTask: true })}
+        >
+          <Ionicons
+            name="add-circle"
+            size={50}
+            color={commonStyles.colors.secondary}
+          />
+        </TouchableOpacity>
       </View>
     );
   }
@@ -165,5 +179,16 @@ const styles = StyleSheet.create({
     fontFamily: commonStyles.fontFamily,
     fontSize: 20,
     color: commonStyles.colors.secondary,
+  },
+  addButton: {
+    position: "absolute",
+    right: 30,
+    bottom: 30,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: commonStyles.colors.today,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
