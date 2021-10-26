@@ -12,11 +12,14 @@ export default props => {
         <ImageBackground style={styles.titleContainer} source={todayImage}>
           <View style={styles.titleBar}>
             <Text style={styles.title}>Hoje</Text>
-            <Text>{today}</Text>
+            <Text style={styles.subtitle}>{today}</Text>
           </View>
         </ImageBackground>
         <View style={styles.taskList}>
-          <Text>Teste!!</Text>
+          <Text>Tarefa 01</Text>
+          <Text>Tarefa 02</Text>
+          <Text>Tarefa 03</Text>
+          <Text>Tarefa 04</Text>
         </View>
       </View>
     );
@@ -42,6 +45,14 @@ const styles = StyleSheet.create({
   },
   title: {
       fontFamily: commomStyles.fontFamily,
-      fontSize: 48
-  }
+      fontSize: 48,
+      color: commomStyles.colors.secondary,
+
+  },
+  subtitle: {
+      fontFamily: commomStyles.fontFamily,
+      fontSize: 20,
+      color: commomStyles.colors.secondary,
+
+  }  
 });

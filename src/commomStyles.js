@@ -1,6 +1,6 @@
 export default {
-  fontFamily: "Inter_900Black",
+  fontFamily: "Roboto_900Black",
   colors: {
-    secondary: "#fff",
+    secondary: "#EAEAEA",
   },
 };
