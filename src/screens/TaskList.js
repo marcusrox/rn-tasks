@@ -20,7 +20,7 @@ import todayImage from "../../assets/imgs/today.jpg";
 import Task from "../components/Task";
 
 import { CheckBox } from "react-native-elements";
-import AddTask from "../components/AddTask";
+import AddTask from "./AddTask";
 import { Ionicons } from "@expo/vector-icons";
 
 const initialState = {
@@ -143,8 +143,8 @@ export default class TaskList extends Component {
         >
           <Ionicons
             name="add-circle"
-            size={50}
-            color={commonStyles.colors.secondary}
+            size={70}
+            color={commonStyles.colors.today}
           />
         </TouchableOpacity>
       </View>
@@ -184,10 +184,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 30,
     bottom: 30,
-    width: 50,
-    height: 50,
+    width: 70,
+    height: 70,
     borderRadius: 25,
-    backgroundColor: commonStyles.colors.today,
+    //backgroundColor: commonStyles.colors.today,
     justifyContent: "center",
     alignItems: "center",
   },

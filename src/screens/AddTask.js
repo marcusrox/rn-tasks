@@ -42,15 +42,20 @@ export default class AddTask extends Component {
 
         if(Platform.OS === 'android') {
             datePicker = (
-                <View>
-                    <TouchableOpacity onPress={() => this.setState({ showDatePicker: true })}>
-                        <Text style={styles.date}>
-                            {dateString}
-                        </Text>
-                    </TouchableOpacity>
-                    {this.state.showDatePicker && datePicker}
-                </View>
-            )
+              <View>
+                <TouchableOpacity
+                  onPress={() => this.setState({ showDatePicker: true })}
+                >
+                  <Text style={styles.date}>{dateString}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => this.setState({ showDatePicker: true })}
+                >
+                  <Text style={styles.date}>{dateString}</Text>
+                </TouchableOpacity>
+                {this.state.showDatePicker && datePicker}
+              </View>
+            );
         }
         
         return datePicker
