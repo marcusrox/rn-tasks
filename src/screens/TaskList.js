@@ -22,36 +22,14 @@ import Task from "../components/Task";
 import { CheckBox } from "react-native-elements";
 import AddTask from "./AddTask";
 import { Ionicons } from "@expo/vector-icons";
+import { createIconSetFromFontello } from "react-native-vector-icons";
 
 const initialState = {
   showDoneTasks: true,
   showAddTask: false,
   visibleTasks: [],
   tasks: [
-    {
-      id: Math.random(),
-      desc: "Ler Livro 1",
-      estimateAt: new Date(),
-      doneAt: new Date(),
-    },
-    {
-      id: Math.random(),
-      desc: "Comprar Livro 1",
-      estimateAt: new Date(),
-      doneAt: null,
-    },
-    {
-      id: Math.random(),
-      desc: "Ler Livro 2",
-      estimateAt: new Date(),
-      doneAt: new Date(),
-    },
-    {
-      id: Math.random(),
-      desc: "Comprar Livro 2",
-      estimateAt: new Date(),
-      doneAt: null,
-    },
+    
   ],
 };
 
@@ -102,11 +80,25 @@ export default class TaskList extends Component {
     this.setState({ tasks }, this.filterTasks);
   };
 
+  addTask = newTask => {
+    if (!newTask.desc || !newTask.desc.trim()) {
+        Alert.alert('Dados inválidos', 'Descrição não informada')
+        return
+    }
+    const tasks = [...this.state.tasks]
+    tasks.push({id: Math.random(), desc: newTask.desc, date: newTask.date, doneAt: null})
+    this.setState({ tasks, showAddTask: false }, this.filterTasks);
+  }
+
   render() {
     const today = moment().locale("pt-br").format("ddd, D [de] MMMM");
     return (
       <View style={styles.container}>
-        <AddTask isVisible={this.state.showAddTask} onCancel={() => this.setState({showAddTask: false})} />
+        <AddTask
+          isVisible={this.state.showAddTask}
+          onCancel={() => this.setState({ showAddTask: false })}
+          onSave={this.addTask}
+        />
         <ImageBackground style={styles.titleContainer} source={todayImage}>
           <CheckBox
             containerStyle={{
@@ -132,7 +124,11 @@ export default class TaskList extends Component {
             data={this.state.visibleTasks}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
-              <Task {...item} toggleTask={this.toggleTask} />
+              <Task
+                {...item}
+                onToggleTask={this.toggleTask}
+                onDelete={this.deleteTask}
+              />
             )}
           ></FlatList>
         </View>
@@ -168,7 +164,7 @@ const styles = StyleSheet.create({
   },
   taskList: {
     flex: 8,
-    backgroundColor: "#ba6",
+    backgroundColor: commonStyles.colors.ouro,
   },
   title: {
     fontFamily: commonStyles.fontFamily,
@@ -186,7 +182,7 @@ const styles = StyleSheet.create({
     bottom: 30,
     width: 70,
     height: 70,
-    borderRadius: 25,
+    //borderRadius: 25,
     //backgroundColor: commonStyles.colors.today,
     justifyContent: "center",
     alignItems: "center",

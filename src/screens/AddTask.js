@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {
-    Platform,
+    Platform, Button,
     Modal,
     View,
     Text,
@@ -18,81 +18,122 @@ import commonStyles from '../commonStyles'
 const initialState = { desc: '', date: new Date(), showDatePicker: false }
 
 export default class AddTask extends Component {
+  state = {
+    ...initialState,
+  };
 
-    state = {
-        ...initialState
+  save = () => {
+    const newTask = {
+      desc: this.state.desc,
+      date: this.state.date,
+    };
+
+    this.props.onSave && this.props.onSave(newTask);
+    this.setState({ ...initialState });
+  };
+
+  getDatePickerOLD = () => {
+    let datePicker = (
+      <DateTimePicker
+        value={this.state.date}
+        onChange={(_, date) => this.setState({ date, showDatePicker: false })}
+        mode="date"
+      />
+    );
+
+    const dateString = moment(this.state.date).format(
+      "ddd, D [de] MMMM [de] YYYY"
+    );
+
+    if (Platform.OS === "android") {
+      datePicker = (
+        <View>
+          <TouchableOpacity
+            onPress={() => this.setState({ showDatePicker: true })}
+          >
+            <Text style={styles.date}>{dateString}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => this.setState({ showDatePicker: true })}
+          >
+            <Text style={styles.date}>{dateString}</Text>
+          </TouchableOpacity>
+
+          {this.state.showDatePicker && datePicker}
+        </View>
+      );
     }
 
-    save = () => {
-        const newTask = {
-            desc: this.state.desc,
-            date: this.state.date
-        }
+    return datePicker;
+  };
 
-        this.props.onSave && this.props.onSave(newTask)
-        this.setState({ ...initialState })
-    }
+  getDatePicker = () => {
+       const dateString = moment(this.state.date).format(
+         "ddd, D [de] MMMM [de] YYYY"
+       );
+    return (
+      <View>
+        <View>
+          <Button
+            onPress={() => this.setState({ showDatePicker: true })}
+            title={dateString}
+            style={{ borderRadius: 4 }}
+          />
+        </View>
+        {this.state.showDatePicker && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={this.state.date}
+            mode="date"
+            display="default"
+            onChange={(_, newDate) =>
+              this.setState({
+                date: newDate ? newDate : this.state.date,
+                showDatePicker: false,
+              })
+            }
+          />
+        )}
+      </View>
+    );
+  };
 
-    getDatePicker = () => {
-        let datePicker = <DateTimePicker value={this.state.date}
-            onChange={(_, date) => this.setState({ date, showDatePicker: false })}
-            mode='date' />
-        
-        const dateString = moment(this.state.date).format('ddd, D [de] MMMM [de] YYYY')
-
-        if(Platform.OS === 'android') {
-            datePicker = (
-              <View>
-                <TouchableOpacity
-                  onPress={() => this.setState({ showDatePicker: true })}
-                >
-                  <Text style={styles.date}>{dateString}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => this.setState({ showDatePicker: true })}
-                >
-                  <Text style={styles.date}>{dateString}</Text>
-                </TouchableOpacity>
-                {this.state.showDatePicker && datePicker}
-              </View>
-            );
-        }
-        
-        return datePicker
-    }
-
-    render() {
-        return (
-            <Modal transparent={true} visible={this.props.isVisible}
-                onRequestClose={this.props.onCancel}
-                animationType='slide'>
-                <TouchableWithoutFeedback
-                    onPress={this.props.onCancel}>
-                    <View style={styles.background}></View>
-                </TouchableWithoutFeedback>
-                <View style={styles.container}>
-                    <Text style={styles.header}>Nova Tarefa</Text>
-                    <TextInput style={styles.input} 
-                        placeholder="Informe a Descrição..."
-                        onChangeText={desc => this.setState({ desc })}
-                        value={this.state.desc} />
-                    {this.getDatePicker()}
-                    <View style={styles.buttons}>
-                        <TouchableOpacity onPress={this.props.onCancel}>
-                            <Text style={styles.button}>Cancelar</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={this.save}>
-                            <Text style={styles.button}>Salvar</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <TouchableWithoutFeedback
-                    onPress={this.props.onCancel}>
-                    <View style={styles.background}></View>
-                </TouchableWithoutFeedback>
-            </Modal>
-        )
-    }
+  render() {
+    return (
+      <Modal
+        transparent={true}
+        visible={this.props.isVisible}
+        onRequestClose={this.props.onCancel}
+        animationType="slide"
+      >
+        <TouchableWithoutFeedback onPress={this.props.onCancel}>
+          <View style={styles.background}></View>
+        </TouchableWithoutFeedback>
+        <View style={styles.container}>
+          <Text style={styles.header}>Nova Tarefa</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Informe a Descrição..."
+            onChangeText={(desc) => this.setState({ desc })}
+            value={this.state.desc}
+          />
+          {this.getDatePicker()}
+          <View style={styles.buttons}>
+            <TouchableOpacity onPress={this.props.onCancel}>
+              <Text style={styles.button}>Cancelar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.save}>
+              <Text style={styles.button}>Salvar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <TouchableWithoutFeedback onPress={this.props.onCancel}>
+          <View style={styles.background}></View>
+        </TouchableWithoutFeedback>
+      </Modal>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -115,6 +156,7 @@ const styles = StyleSheet.create({
         fontFamily: commonStyles.fontFamily,
         height: 40,
         margin: 15,
+        padding: 6,
         backgroundColor: '#FFF',
         borderWidth: 1,
         borderColor: '#E3E3E3',
@@ -131,7 +173,7 @@ const styles = StyleSheet.create({
     },
     date: {
         fontFamily: commonStyles.fontFamily,
-        fontSize: 20,
+        fontSize: 16,
         marginLeft: 15
     }
 })
